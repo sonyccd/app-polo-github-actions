@@ -97,7 +97,13 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(MYAPP_UPLOAD_STORE_FILE)
+            storeFile { 
+                if (System.getenv("RELEASE_BUILD") == "true") {
+                    file(System.getenv("MYAPP_UPLOAD_STORE_FILE")) 
+                } else {
+                    null // or a dummy file for debug builds
+                }
+            }
             storePassword MYAPP_UPLOAD_STORE_PASSWORD
             keyAlias MYAPP_UPLOAD_KEY_ALIAS
             keyPassword MYAPP_UPLOAD_KEY_PASSWORD
