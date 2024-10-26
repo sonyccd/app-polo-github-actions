@@ -101,7 +101,7 @@ android {
                 if (System.getenv("RELEASE_BUILD") == "true") {
                     file(System.getenv("MYAPP_UPLOAD_STORE_FILE")) 
                 } else {
-                    null // or a dummy file for debug builds
+                    file('debug.keystore') // or a dummy file for debug builds
                 }
             }
             storePassword MYAPP_UPLOAD_STORE_PASSWORD
