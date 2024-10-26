@@ -97,16 +97,60 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile { 
-                if (System.getenv("RELEASE_BUILD") == "true") {
-                    file(System.getenv("MYAPP_UPLOAD_STORE_FILE")) 
+            signingConfigs {
+    // ...
+    release {
+        storeFile {
+            if (System.getenv("RELEASE_BUILD") == "true") {
+                def storeFilePath = System.getenv("MYAPP_UPLOAD_STORE_FILE")
+                println("Store file path: " + storeFilePath)
+                if (storeFilePath != null) {
+                    file(storeFilePath)
                 } else {
-                    file('debug.keystore') // or a dummy file for debug builds
+                    throw new GradleException("MYAPP_UPLOAD_STORE_FILE environment variable is not set.")
                 }
+            } else {
+                file('debug.keystore')
             }
-            storePassword MYAPP_UPLOAD_STORE_PASSWORD
-            keyAlias MYAPP_UPLOAD_KEY_ALIAS
-            keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+        }
+        storePassword {
+            if (System.getenv("RELEASE_BUILD") == "true") {
+                def storePasswordValue = System.getenv("MYAPP_UPLOAD_STORE_PASSWORD")
+                println("Store password: " + storePasswordValue)
+                if (storePasswordValue != null) {
+                    storePasswordValue
+                } else {
+                    throw new GradleException("MYAPP_UPLOAD_STORE_PASSWORD environment variable is not set.")
+                }
+            } else {
+                'android' // Or the password for your debug keystore
+            }
+        }
+        keyAlias {
+            if (System.getenv("RELEASE_BUILD") == "true") {
+                def keyAliasValue = System.getenv("MYAPP_UPLOAD_KEY_ALIAS")
+                println("Key alias: " + keyAliasValue)
+                if (keyAliasValue != null) {
+                    keyAliasValue
+                } else {
+                    throw new GradleException("MYAPP_UPLOAD_KEY_ALIAS environment variable is not set.")
+                }
+            } else {
+                'androiddebugkey' // Or the alias for your debug keystore
+            }
+        }
+        keyPassword {
+            if (System.getenv("RELEASE_BUILD") == "true") {
+                def keyPasswordValue = System.getenv("MYAPP_UPLOAD_KEY_PASSWORD")
+                println("Key password: " + keyPasswordValue)
+                if (keyPasswordValue != null) {
+                    keyPasswordValue
+                } else {
+                    throw new GradleException("MYAPP_UPLOAD_KEY_PASSWORD environment variable is not set.")
+                }
+            } else {
+                'android' // Or the password for your debug keystore
+            }
         }
     }
     buildTypes {
