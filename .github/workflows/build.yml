@@ -1,0 +1,41 @@
+name: Build React Native App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Build Android debug
+        run: |
+          cd android && ./gradlew assembleDebug
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Install Pods
+        run: cd ios && pod install
+      - name: Build iOS
+        run: |
+          xcodebuild -workspace ios/YourProjectName.xcworkspace -scheme YourSchemeName -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' build
