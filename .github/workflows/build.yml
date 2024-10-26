@@ -26,7 +26,7 @@ jobs:
         run: npm install
       - name: Build Android debug
         run: |
-          cd android && ./gradlew assembleDebug
+          cd android && ./gradlew assembleDebug -x assembleRelease
 
   build-ios:
     runs-on: macos-latest
